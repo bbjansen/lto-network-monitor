@@ -54,7 +54,7 @@ async function init() {
   }
 
   // Set cron jobs
-  cron.schedule(process.env.CRON_DISCOVER || '* * * * *', () => {
+  cron.schedule(process.env.CRON_DISCOVER || '*/15 * * * *', () => {
     discoverNodes()
   })
 

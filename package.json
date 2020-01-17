@@ -1,5 +1,5 @@
 {
-  "name": "lto-node-monitor",
+  "name": "lto-network-monitor",
   "version": "0.1.0",
   "description": "LTO Node Monitor backed by a SQL DB and cron.",
   "main": "app.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bbjansen/lto-node-monitor.git"
+    "url": "git+https://github.com/bbjansen/lto-network-monitor.git"
   },
   "keywords": [
     "lto",
@@ -21,9 +21,9 @@
   "author": "bbjansen <bobjansen@pm.me>",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/bbjansen/lto-node-monitor/issues"
+    "url": "https://github.com/bbjansen/lto-network-monitor/issues"
   },
-  "homepage": "https://github.com/bbjansen/lto-node-monitor#readme",
+  "homepage": "https://github.com/bbjansen/lto-network-monitor#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "console-stamp": "^0.2.9",

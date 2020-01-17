@@ -1,4 +1,4 @@
-# LTO Node Monitor
+# LTO Network Monitor
 > A nifty cron script written in Node.JS that grabs all known peers of the LTO network and tracks data on availbility, ports, geolocation and status.
 ## Requirements
 - Node.Js 8+

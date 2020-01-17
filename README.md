@@ -10,7 +10,7 @@
 Create ``.env`` file in the root directory:
 
 ```
-SEED_NODE=172.104.147.148:6868
+SEED_NODE=<node address>:<api port>
 DB_FILE=./db.sqlite3
 CRON_DISCOVER=* * * * *
 CRON_PING=0 0 * * *

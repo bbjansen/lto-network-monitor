@@ -43,7 +43,7 @@ async function init() {
     const checkSeed = await db.selectNode(seedNode)
 
     if(checkSeed.length <= 0) {
-      await db.insertNode(seedNode, Date.now())
+      await db.insertNode(seedNode, {})
       console.info('[seed] set as ' + seedNode)
     } else {
       console.info('[seed] using ' + seedNode)
@@ -79,7 +79,7 @@ async function discoverNodes() {
 
     // Store peer nodes, let sql handle duplicates
     getPeers.map(async node => {
-      await db.insertNode(node.address.slice(1), { lastSeen: node.lastSeen })
+      await db.insertNode(node.address.slice(1), { seen: node.lastSeen})
     })
   })
 }
@@ -92,7 +92,7 @@ async function pingNodes() {
   knownNodes.map(async node => {
 
     let nodestatus = await network.getStatus(node.address)
-    await db.updatePing(node.address, nodestatus)
+    await db.updateStatus(node.address, nodestatus)
   })
 }
 

@@ -43,13 +43,10 @@ async function init() {
     const checkSeed = await db.selectNode(seedNode)
 
     if(checkSeed.length <= 0) {
-      await db.insertNode({
-        address: '/' + seedNode,
-        lastSeen: Date.now()
-      })
-      
+      await db.insertNode(seedNode, Date.now())
+      console.info('[seed] set as ' + seedNode)
     } else {
-      console.info('[seed] ' + seedNode)
+      console.info('[seed] using ' + seedNode)
     }
   }
 
@@ -78,16 +75,12 @@ async function discoverNodes() {
 
   // collect peer node for each stored node
   knownNodes.map(async node => {
-    let peerList = await network.getPeers(node.address)
+    let getPeers = await network.getPeers(node.address)
 
-    // if not peer list, no connection
-    if (peerList.length > 0) {
-    
-      // store/update
-      peerList.map(async node => {
-        await db.insertNode(node)
-      })
-    }
+    // Store peer nodes, let sql handle duplicates
+    getPeers.map(async node => {
+      await db.insertNode(node.address.slice(1), { lastSeen: node.lastSeen })
+    })
   })
 }
 

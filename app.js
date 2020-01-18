@@ -11,8 +11,8 @@ require('dotenv').config()
 require('console-stamp')(console, {
   pattern: 'dd/mm/yyyy HH:MM:ss.l',
   colors: {
-      stamp: 'green',
-      label: 'white',
+    stamp: 'green',
+    label: 'white'
   }
 })
 
@@ -38,21 +38,17 @@ const seedNode = {
 init(seedNode)
 
 // Init
-async function init(seedNode) {
+async function init (seedNode) {
   await db.createTables()
 
   // Check for patient zero
 
-  if(!seedNode.address) {
-
+  if (!seedNode.address) {
     console.error('no seed node address specified in .env [ip:port]')
     return
-
   } else {
-
     const checkSeed = await db.selectNode(seedNode.address)
-    if(checkSeed.length <= 0) {
-
+    if (checkSeed.length <= 0) {
       await db.insertNode(seedNode.address, seedNode)
 
       console.info('[seed] set as ' + seedNode.address)
@@ -80,7 +76,7 @@ async function init(seedNode) {
 }
 
 // Discover nodes in the network
-async function discoverNodes() {
+async function discoverNodes () {
   // Get all stored nodes that have been last seen 24 hours +
   let knownNodes = await db.selectNodes()
 
@@ -101,41 +97,37 @@ async function discoverNodes() {
   })
 }
 
-async function pingNodes() {
+async function pingNodes () {
   // Get all stored nodes
   let knownNodes = await db.selectNodes()
 
   // check status for each stored node
   knownNodes.map(async node => {
-
     let getStatus = await network.getStatus(node.ip, node.port)
-    
+
     await db.updateStatus(node.address, getStatus)
   })
 }
 
-async function scanNodes() {
+async function scanNodes () {
   // Get all stored nodes that have been last seen 24 hours +
   let knownNodes = await db.selectNodes()
 
   // check ports for each stored node
   knownNodes.map(async node => {
-
     let portStatus = await network.checkPort(node.address)
     await db.updatePort(node.address, portStatus)
   })
 }
 
-async function locateNodes() {
+async function locateNodes () {
   // Get all stored nodes
   let knownNodes = await db.selectNodes()
 
   // check status for each stored node
   knownNodes.map(async node => {
-
     let geoData = await network.locateNode(node.ip)
 
     await db.updateGeo(node.address, geoData)
   })
 }
-

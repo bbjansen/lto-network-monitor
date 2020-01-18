@@ -90,8 +90,7 @@ async function discoverNodes() {
 
     // Store peer nodes, let sql handle duplicates
     getPeers.map(async peer => {
-      console.log(peer.declaredAddress.slice(1))
-      await db.insertNode(peer.declaredAddress.slice(1), {
+      await db.insertNode(peer.address.slice(1), {
         ip: peer.address.slice(1).split(':')[0],
         port: peer.address.split(':')[1],
         name: peer.peerName,

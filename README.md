@@ -14,7 +14,7 @@ SEED_NODE=<node address>:<api port>
 DB_FILE=./db.sqlite3
 TIMEOUT=2000
 CRON_DISCOVER=*/15 * * * *
-CRON_PING=0 0 * * *
-CRON_SCAN=0 0 * * *
-CRON_LOCATE=0 0 * * 0
+CRON_PING=0 * * * *
+CRON_SCAN=0 * * * *
+CRON_LOCATE=0 0 * * *
 ```

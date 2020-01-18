@@ -58,21 +58,10 @@ async function init (seedNode) {
   }
 
   // Set cron jobs
-  cron.schedule(process.env.CRON_DISCOVER || '*/15 * * * *', () => {
-    discoverNodes()
-  })
-
-  cron.schedule(process.env.CRON_PING || '0 0 * * *', () => {
-    pingNodes()
-  })
-
-  cron.schedule(process.env.CRON_SCAN || '0 0 * * *', () => {
-    scanNodes()
-  })
-
-  cron.schedule(process.env.CRON_LOCATE || '0 0 * * 0', () => {
-    locateNodes()
-  })
+  cron.schedule(process.env.CRON_DISCOVER || '*/15 * * * *', () => { discoverNodes() })
+  cron.schedule(process.env.CRON_PING || '0 * * * *', () => { pingNodes() })
+  cron.schedule(process.env.CRON_SCAN || '0 * * * *', () => { scanNodes() })
+  cron.schedule(process.env.CRON_LOCATE || '0 0 * * *', () => { locateNodes() })
 }
 
 // Discover nodes in the network

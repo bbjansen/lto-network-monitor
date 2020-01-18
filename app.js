@@ -23,30 +23,41 @@ const Network = require('./lib/network')
 const db = new DB()
 const network = new Network()
 
+// Seed Node Config
+
+const seedNode = {
+  address: process.env.SEED_NODE,
+  ip: process.env.SEED_NODE.split(':')[0],
+  port: process.env.SEED_NODE.split(':')[1],
+  name: 'LTO Services',
+  app: 'ltoL',
+  version: '1.1.0'
+}
+
 // Start
-init()
+init(seedNode)
 
 // Init
-async function init() {
+async function init(seedNode) {
   await db.createTables()
 
   // Check for patient zero
-  let seedNode = process.env.SEED_NODE
 
-  if(!seedNode) {
+  if(!seedNode.address) {
 
     console.error('no seed node address specified in .env [ip:port]')
     return
 
   } else {
 
-    const checkSeed = await db.selectNode(seedNode)
-
+    const checkSeed = await db.selectNode(seedNode.address)
     if(checkSeed.length <= 0) {
-      await db.insertNode(seedNode, {})
-      console.info('[seed] set as ' + seedNode)
+
+      await db.insertNode(seedNode.address, seedNode)
+
+      console.info('[seed] set as ' + seedNode.address)
     } else {
-      console.info('[seed] using ' + seedNode)
+      console.info('[seed] using ' + seedNode.address)
     }
   }
 
@@ -75,11 +86,18 @@ async function discoverNodes() {
 
   // collect peer node for each stored node
   knownNodes.map(async node => {
-    let getPeers = await network.getPeers(node.address)
+    let getPeers = await network.getPeers(node.ip, node.port)
 
     // Store peer nodes, let sql handle duplicates
-    getPeers.map(async node => {
-      await db.insertNode(node.address.slice(1), { seen: node.lastSeen})
+    getPeers.map(async peer => {
+      console.log(peer.declaredAddress.slice(1))
+      await db.insertNode(peer.declaredAddress.slice(1), {
+        ip: peer.address.slice(1).split(':')[0],
+        port: peer.address.split(':')[1],
+        name: peer.peerName,
+        app: peer.applicationName,
+        version: peer.applicationVersion
+      })
     })
   })
 }
@@ -91,8 +109,9 @@ async function pingNodes() {
   // check status for each stored node
   knownNodes.map(async node => {
 
-    let nodestatus = await network.getStatus(node.address)
-    await db.updateStatus(node.address, nodestatus)
+    let getStatus = await network.getStatus(node.ip, node.port)
+    
+    await db.updateStatus(node.address, getStatus)
   })
 }
 
@@ -115,7 +134,7 @@ async function locateNodes() {
   // check status for each stored node
   knownNodes.map(async node => {
 
-    let geoData = await network.locateNode(node.address)
+    let geoData = await network.locateNode(node.ip)
 
     await db.updateGeo(node.address, geoData)
   })

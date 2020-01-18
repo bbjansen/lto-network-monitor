@@ -105,7 +105,6 @@ async function scanNodes () {
   // check ports for each stored node
   knownNodes.map(async node => {
     let portStatus = await network.checkPort(node.ip, node.port)
-    console.log(portStatus)
     await db.updatePort(node.address, portStatus)
   })
 }
